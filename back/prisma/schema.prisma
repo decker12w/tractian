@@ -43,7 +43,7 @@ model Order {
   type        OrderType
   machineName String
   file        String
-  createdAt   DateTime
+  createdAt   DateTime @default(now())
   startedAt   DateTime?
   finishedAt  DateTime?
 
