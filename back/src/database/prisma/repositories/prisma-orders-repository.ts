@@ -53,4 +53,8 @@ export class PrismaOrdersRepository implements OrdersRepository {
       orderBy: { createdAt: 'desc' },
     })
   }
+
+  async findAll(): Promise<Order[]> {
+    return this.prismaService.order.findMany()
+  }
 }

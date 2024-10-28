@@ -9,6 +9,7 @@ import { PdfError } from './errors/pdf-error'
 import { Folder, Storage } from '@/storage/contracts/contract-storage'
 import { randomUUID } from 'node:crypto'
 import { OrdersRepository } from '@/database/contracts/contract-orders-repository'
+import { TechnicalRecommender } from '@/ai/contracts/contract-technical-recommender'
 
 type CreateOrderServiceRequest = {
   title: string
@@ -16,7 +17,6 @@ type CreateOrderServiceRequest = {
   type: OrderType
   machineName: string
   plannerId: string
-  technicalId: string
 }
 
 type CreateOrderServiceResponse = {
@@ -30,6 +30,7 @@ export class CreateOrderService {
     private plannersRepository: PlannersRepository,
     private ordersRepository: OrdersRepository,
     private storage: Storage,
+    private technicalRecommender: TechnicalRecommender,
   ) {}
 
   async execute({
@@ -38,12 +39,21 @@ export class CreateOrderService {
     type,
     machineName,
     plannerId,
-    technicalId,
   }: CreateOrderServiceRequest): Promise<CreateOrderServiceResponse> {
     const planner = await this.plannersRepository.findById(plannerId)
     if (planner === null) {
       throw new ResourceNotFoundError('Planejador', 'id', plannerId)
     }
+
+    const orders = await this.ordersRepository.findAll()
+    const technicals = await this.technicalsRepository.findAll()
+
+    const technicalId = await this.technicalRecommender.recommendTechnical({
+      orders,
+      technicals,
+    })
+
+    console.log(technicalId)
 
     const technical = await this.technicalsRepository.findById(technicalId)
     if (technical === null) {

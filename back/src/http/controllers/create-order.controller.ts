@@ -21,20 +21,13 @@ export class CreateOrderController {
   async handle(
     @CurrentUser() { sub }: UserPayload,
     @Body(bodyValidationPipe)
-    {
-      title,
-      description,
-      type,
-      machineName,
-      technicalId,
-    }: CreateOrderBodySchema,
+    { title, description, type, machineName }: CreateOrderBodySchema,
   ) {
     const { order } = await this.createOrderService.execute({
       title,
       description,
       type,
       machineName,
-      technicalId,
       plannerId: sub,
     })
 

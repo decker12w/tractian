@@ -27,4 +27,5 @@ export abstract class OrdersRepository {
   abstract addTools: (data: AddTool) => Promise<Order>
   abstract findById: (id: string) => Promise<Order | null>
   abstract findByTechnical: (technicalId: string) => Promise<Order[]>
+  abstract findAll: () => Promise<Order[]>
 }
