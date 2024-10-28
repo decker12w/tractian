@@ -1,20 +1,27 @@
-import {
-  ServiceOrderAudioDTO,
-  ServiceOrderFormDTO,
-} from "../schemas/serviceOrder";
+import { ServiceOrderDTO } from "../schemas/serviceOrder";
 import { api } from "./api";
 
-const orderForm = async (data: ServiceOrderFormDTO) => {
-  const response = await api.post("", {
-    email: data.username,
-    password: data.password,
+// Função para enviar ordem de serviço
+export const submitServiceOrder = async (data: ServiceOrderDTO) => {
+  const formData = new FormData();
+
+  if (data.text) {
+    formData.append("text", data.text);
+  }
+
+  if (data.audioUpload && data.audioUpload.length > 0) {
+    formData.append("audio", data.audioUpload[0]);
+  }
+
+  if (data.recordedAudio) {
+    formData.append("audio", data.recordedAudio, "recordedAudio.webm");
+  }
+
+  const response = await api.post("/orders/analyze", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
   });
+
   return response.data;
 };
-
-const orderAudio = async (data: ServiceOrderAudioDTO) => {
-  const response = await api.post("/admins/create", data);
-  return response.data;
-};
-
-export { login, register };

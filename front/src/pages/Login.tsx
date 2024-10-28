@@ -6,10 +6,13 @@ import Button from "../components/Button";
 import Input from "../components/Input";
 import { FaIndustry } from "react-icons/fa";
 import { LoginDTO, LoginSchema } from "../utils/schemas/auth";
+import { login } from "../utils/api/auth";
+import { useAuthContext } from "../context/AuthProvider";
 
 export default function Login() {
   const navigate = useNavigate();
   const [loginError, setLoginError] = useState(false);
+  const { loginUser } = useAuthContext();
 
   const {
     register,
@@ -20,13 +23,19 @@ export default function Login() {
     mode: "all",
   });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
-
-    navigate("/home");
-    //se não
-    /*   showToast("E-mail e/ou senha incorretos", "error"); */
-    setLoginError(true);
+  const onSubmit = async (data: LoginDTO) => {
+    try {
+      const response = await login(data);
+      if (response.accessToken) {
+        loginUser(response.accessToken);
+        navigate("/home");
+      } else {
+        setLoginError(true);
+      }
+    } catch (error) {
+      console.error("Erro no login:", error);
+      setLoginError(true);
+    }
   };
 
   return (
@@ -47,7 +56,9 @@ export default function Login() {
               id="username"
               register={register}
               name="username"
-              errors={errors.username || loginError}
+              errors={
+                errors.username || (loginError && "Credenciais inválidas")
+              }
             />
             <Input
               label="Senha"
@@ -56,8 +67,13 @@ export default function Login() {
               id="password"
               register={register}
               name="password"
-              errors={errors.password || loginError}
+              errors={
+                errors.password || (loginError && "Credenciais inválidas")
+              }
             />
+            {loginError && (
+              <span className="text-red-500">E-mail e/ou senha incorretos</span>
+            )}
             <div className="flex flex-col gap-0.5 mt-5">
               <Button variant="primary" size="big" type="submit">
                 ENTRAR

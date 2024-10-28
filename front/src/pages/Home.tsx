@@ -13,14 +13,14 @@ export default function ServiceOrderForm() {
         <div className="bg-black text-white py-10 px-24 rounded-3xl ">
           <div className="w-[300px] flex flex-col gap-2.5 items-center">
             <div className="text-4xl font-bold mb-3 text-center">
-              Escolha a diva de envio
+              Escolha a forma de envio
             </div>
             <div className="flex flex-col gap-0.5 mt-5">
               <Button
                 variant="primary"
                 size="big"
                 type="submit"
-                onClick={() => navigate("/order-form")}
+                onClick={() => navigate("/order-text")}
               >
                 Enviar por texto
               </Button>

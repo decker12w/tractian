@@ -1,22 +1,25 @@
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import { FaIndustry } from "react-icons/fa";
 import { RegisterDTO, RegisterSchema } from "../utils/schemas/auth";
 import Dropdown from "../components/Dropdown";
 import { Roles } from "../utils/types";
+import { registerUser } from "../utils/api/auth";
+import { useAuthContext } from "../context/AuthProvider";
 
 const roles = [
   { id: Roles.TECHNICAL, type: "Technical" },
   { id: Roles.PLANNER, type: "Planner" },
 ];
 
-export default function Register() {
+const Register: React.FC = () => {
   const navigate = useNavigate();
-  const [loginError, setLoginError] = useState(false);
+  const [registerError, setRegisterError] = useState<string | null>(null);
+  const { loginUser } = useAuthContext(); // Opcional: para logar o usuário após registro
 
   const {
     control,
@@ -28,8 +31,26 @@ export default function Register() {
     mode: "all",
   });
 
-  const onSubmit = (data: RegisterDTO) => {
-    console.log(data);
+  const onSubmit = async (data: RegisterDTO) => {
+    try {
+      const response = await registerUser(data); // Chamar a API de registro
+      if (response.user) {
+        navigate("/login"); // Redireciona para a página de login após registro
+      } else {
+        setRegisterError("Registro falhou. Tente novamente.");
+      }
+    } catch (error: any) {
+      console.error("Erro no registro:", error);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setRegisterError(error.response.data.message); // Mensagem de erro específica do backend
+      } else {
+        setRegisterError("Ocorreu um erro ao registrar. Tente novamente.");
+      }
+    }
   };
 
   return (
@@ -53,7 +74,7 @@ export default function Register() {
               id="username"
               register={register}
               name="username"
-              errors={errors.username || loginError}
+              errors={errors.username?.message}
             />
 
             <Input
@@ -63,17 +84,17 @@ export default function Register() {
               id="password"
               register={register}
               name="password"
-              errors={errors.password || loginError}
+              errors={errors.password?.message}
             />
 
             <Input
-              label="Fullname"
+              label="Nome Completo"
               placeholder="Digite seu Nome Completo"
               type="text"
-              id="fullname"
+              id="fullName"
               register={register}
-              name="fullname"
-              errors={errors.fullname || loginError}
+              name="fullName"
+              errors={errors.fullName?.message}
             />
 
             <Controller
@@ -87,12 +108,16 @@ export default function Register() {
                     name: role.type,
                   }))}
                   placeholder="Selecione uma Role"
-                  errors={errors.role}
+                  errors={errors.role?.message}
                   value={field.value}
                   onSelect={(value) => field.onChange(value)}
                 />
               )}
             />
+
+            {registerError && (
+              <span className="text-red-500 text-sm mt-2">{registerError}</span>
+            )}
 
             <div className="flex flex-col gap-0.5 mt-5">
               <Button variant="primary" size="big" type="submit">
@@ -113,4 +138,6 @@ export default function Register() {
       </div>
     </div>
   );
-}
+};
+
+export default Register;

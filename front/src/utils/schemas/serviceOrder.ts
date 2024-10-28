@@ -1,37 +1,30 @@
 import { z } from "zod";
 import { OrderType } from "../types";
 
-const ServiceOrderFormSchema = z.object({
+const CreateOrderFormSchema = z.object({
   title: z.string().min(1, "Campo obrigatório"),
   description: z.string().min(1, "Campo obrigatório"),
   machineName: z.string().min(1, "Campo obrigatório"),
   orderType: z.nativeEnum(OrderType),
 });
 
-const ServiceOrderAudioSchema = z.object({
-  // Outros campos do formulário, se houver
-  audioUpload: z
-    .any()
-    .optional()
-    .refine((file) => {
-      if (!file || file.length === 0) return true;
-      return file.length === 1 && file[0].type.startsWith("audio/");
-    }, "Por favor, envie um arquivo de áudio válido."),
-  recordedAudio: z
-    .any()
-    .optional()
-    .refine((file) => {
-      if (!file) return true;
-      return file instanceof Blob && file.type.startsWith("audio/");
-    }, "Áudio gravado inválido."),
-});
+export const ServiceOrderSchema = z
+  .object({
+    text: z.string().optional(),
+    audioUpload: z.any().optional(),
+    recordedAudio: z.any().optional(),
+  })
+  .refine(
+    (data) =>
+      (data.text && !data.audioUpload && !data.recordedAudio) ||
+      (!data.text && (data.audioUpload || data.recordedAudio)),
+    {
+      message: "Você deve fornecer apenas texto ou áudio, não ambos.",
+    }
+  );
 
-type ServiceOrderFormDTO = z.infer<typeof ServiceOrderFormSchema>;
-type ServiceOrderAudioDTO = z.infer<typeof ServiceOrderAudioSchema>;
+export type ServiceOrderDTO = z.infer<typeof ServiceOrderSchema>;
 
-export {
-  ServiceOrderFormSchema,
-  type ServiceOrderFormDTO,
-  ServiceOrderAudioSchema,
-  type ServiceOrderAudioDTO,
-};
+type ServiceOrderFormDTO = z.infer<typeof CreateOrderFormSchema>;
+
+export { CreateOrderFormSchema, type ServiceOrderFormDTO };

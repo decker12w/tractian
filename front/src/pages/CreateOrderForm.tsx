@@ -6,7 +6,7 @@ import Input from "../components/Input";
 import { FaIndustry } from "react-icons/fa";
 import {
   ServiceOrderFormDTO,
-  ServiceOrderFormSchema,
+  CreateOrderFormSchema,
 } from "../utils/schemas/serviceOrder";
 import Dropdown from "../components/Dropdown";
 import { OrderType } from "../utils/types";
@@ -27,7 +27,7 @@ export default function ServiceOrderForm() {
     control,
     formState: { errors },
   } = useForm<ServiceOrderFormDTO>({
-    resolver: zodResolver(ServiceOrderFormSchema),
+    resolver: zodResolver(CreateOrderFormSchema),
     mode: "all",
   });
 
@@ -46,7 +46,7 @@ export default function ServiceOrderForm() {
         >
           <div className="w-[300px] flex flex-col gap-2.5 items-center">
             <div className="text-4xl font-bold mb-3 text-center">
-              Formulário ordem de Serviço (Texto)
+              Formulário criação de order
             </div>
             <Input
               label="Título"

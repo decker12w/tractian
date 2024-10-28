@@ -1,16 +1,14 @@
-// src/components/ServiceOrderAudio.jsx
-
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "../components/Button";
-
 import { FaIndustry } from "react-icons/fa";
 import {
-  ServiceOrderAudioDTO,
-  ServiceOrderAudioSchema,
+  ServiceOrderDTO,
+  ServiceOrderSchema,
 } from "../utils/schemas/serviceOrder";
 import { useState, useRef } from "react";
+import { submitServiceOrder } from "../utils/api/order";
 
 export default function ServiceOrderAudio() {
   const navigate = useNavigate();
@@ -20,14 +18,15 @@ export default function ServiceOrderAudio() {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<ServiceOrderAudioDTO>({
-    resolver: zodResolver(ServiceOrderAudioSchema),
+  } = useForm<ServiceOrderDTO>({
+    resolver: zodResolver(ServiceOrderSchema),
     mode: "all",
   });
 
-  const [recordingStatus, setRecordingStatus] = useState("inactive"); // "recording" | "inactive"
+  const [recordingStatus, setRecordingStatus] = useState<
+    "inactive" | "recording"
+  >("inactive");
   const [audioURL, setAudioURL] = useState<string | null>(null);
-  const [recordedAudioBlob, setRecordedAudioBlob] = useState<Blob | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const [permission, setPermission] = useState(false);
@@ -35,7 +34,7 @@ export default function ServiceOrderAudio() {
   const getMicrophonePermission = async () => {
     if ("MediaRecorder" in window) {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({
+        await navigator.mediaDevices.getUserMedia({
           audio: true,
           video: false,
         });
@@ -60,7 +59,7 @@ export default function ServiceOrderAudio() {
       video: false,
     });
 
-    const mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
+    const mediaRecorder = new MediaRecorder(stream);
     mediaRecorderRef.current = mediaRecorder;
     audioChunksRef.current = [];
 
@@ -76,7 +75,6 @@ export default function ServiceOrderAudio() {
       });
       const url = URL.createObjectURL(audioBlob);
       setAudioURL(url);
-      setRecordedAudioBlob(audioBlob);
       setValue("recordedAudio", audioBlob, { shouldValidate: true });
     };
 
@@ -90,34 +88,17 @@ export default function ServiceOrderAudio() {
     }
   };
 
-  const onSubmit = (data: ServiceOrderAudioDTO) => {
+  const onSubmit = async (data: ServiceOrderDTO) => {
     console.log("Dados enviados:", data);
 
-    const formData = new FormData();
-
-    if (data.audioUpload && data.audioUpload.length > 0) {
-      formData.append("audioUpload", data.audioUpload[0]);
+    try {
+      const response = await submitServiceOrder(data);
+      console.log("Resultado:", response);
+      // Trate o resultado aqui
+    } catch (error) {
+      console.error("Erro ao enviar a ordem de serviço:", error);
+      // Trate o erro aqui
     }
-
-    if (data.recordedAudio) {
-      formData.append("recordedAudio", data.recordedAudio);
-    }
-
-    // Aqui você pode enviar o formData para o backend usando fetch ou axios
-    // Exemplo com fetch:
-    /*
-    fetch('/api/upload', {
-      method: 'POST',
-      body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-      // Manipule a resposta do servidor
-    })
-    .catch(error => {
-      console.error('Erro:', error);
-    });
-    */
   };
 
   return (
@@ -192,9 +173,18 @@ export default function ServiceOrderAudio() {
               )}
             </div>
 
+            {/* Botões */}
             <div className="flex flex-col gap-0.5 mt-5 w-full">
               <Button variant="primary" size="big" type="submit">
                 Enviar
+              </Button>
+              <Button
+                variant="secondary"
+                type="button"
+                size="big"
+                onClick={() => navigate("/home")}
+              >
+                Voltar ao Home
               </Button>
             </div>
           </div>
