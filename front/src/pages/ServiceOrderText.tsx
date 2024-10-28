@@ -30,6 +30,7 @@ export default function ServiceOrderText() {
     try {
       const response = await submitServiceOrder(data);
       setResult(response.result);
+      navigate("/order-create");
     } catch (error: any) {
       console.error("Erro ao enviar a ordem de serviço:", error);
       if (

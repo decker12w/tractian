@@ -9,3 +9,12 @@ export enum Roles {
   TECHNICAL = "TECHNICAL",
   PLANNER = "PLANNER",
 }
+
+export type AnalyzerResponse = {
+  analysisResult: {
+    title: string;
+    description: string;
+    type: OrderType;
+    machineName: string;
+  }[];
+};

@@ -9,10 +9,11 @@ import {
 } from "../utils/schemas/serviceOrder";
 import { useState, useRef } from "react";
 import { submitServiceOrder } from "../utils/api/order";
+import { useAnalyzerContext } from "../context/AnalyserContext";
 
 export default function ServiceOrderAudio() {
   const navigate = useNavigate();
-
+  const { setResponse } = useAnalyzerContext();
   const {
     register,
     handleSubmit,
@@ -94,7 +95,8 @@ export default function ServiceOrderAudio() {
     try {
       const response = await submitServiceOrder(data);
       console.log("Resultado:", response);
-      // Trate o resultado aqui
+      setResponse(response);
+      navigate("/order-create");
     } catch (error) {
       console.error("Erro ao enviar a ordem de serviço:", error);
       // Trate o erro aqui
