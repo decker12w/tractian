@@ -8,7 +8,7 @@
 
 ## Descrição do Projeto
 
-Este projeto foi desenvolvido durante o Hackathon TRACTIAN 2024 e visa solucionar o problema enfrentado por técnicos de manutenção ao receber ordens de serviço em áudio, tornando a execução das tarefas mais rápida e eficiente. A aplicação permite que planejadores enviem Work Orders (ordens de serviço) em áudio ou texto, assegurando que técnicos possam acessar informações detalhadas, inclusive em PDF.
+Este projeto foi desenvolvido durante o Hackathon TRACTIAN 2024 e visa solucionar o problema enfrentado por técnicos de manutenção ao receber ordens de serviço em áudio, tornando a execução das tarefas mais rápida e eficiente. A aplicação permite que planejadores enviem Work Orders (ordens de serviço) em áudio ou texto, assegurando que técnicos possam acessar informações detalhadas, inclusive em PDF. Além disso, os técnicos recebem recomendações de ferramentas e são alocados com base em critérios justos, para evitar muitos técnicos trabalharem sempre nos mesmos dias.
 
 ### Motivação
 
@@ -43,10 +43,3 @@ Nosso projeto foi desenvolvido considerando os seguintes critérios:
 
 - **Node.js** e **Docker**: Certifique-se de ter o Node.js e Docker instalados em sua máquina.
 - **Instalação de Dependências**: Após clonar o repositório, navegue até a pasta do projeto e execute `npm install` para instalar as dependências do projeto.
-
-### Execução
-
-1. **Inicie os Containers**:  
-   Use Docker para iniciar os containers do backend, frontend e banco de dados.
-   ```bash
-   docker-compose up
