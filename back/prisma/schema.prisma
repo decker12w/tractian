@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Technical {
+  id       String @id @default(uuid())
+  fullName String
+  username String @unique
+  password String
+
+  orders Order[]
+
+  @@map("technicals")
+}
+
+model Planner {
+  id       String @id @default(uuid())
+  fullName String
+  username String @unique
+  password String
+
+  orders Order[]
+
+  @@map("planners")
+}
+
+enum OrderType {
+  PREDITIVA
+  PREVENTIVA
+  CORRETIVA
+  INSPECAO
+}
+
+model Order {
+  id          String    @id @default(uuid())
+  title       String
+  description String
+  type        OrderType
+  machineName String
+  file        String
+  createdAt   DateTime
+  startedAt   DateTime?
+  finishedAt  DateTime?
+
+  plannerId   String
+  planner     Planner      @relation(fields: [plannerId], references: [id])
+  technicalId String
+  technical   Technical    @relation(fields: [technicalId], references: [id])
+  tools       OrderTools[]
+
+  @@map("orders")
+}
+
+model OrderTools {
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id])
+  toolId  String
+  tool    Tool   @relation(fields: [toolId], references: [id])
+
+  @@id([orderId, toolId])
+  @@map("order_tools")
+}
+
+model Tool {
+  id            String @id @default(uuid())
+  category      String
+  description   String
+  sap           String @unique
+  quantity      Int
+  quantityInUse Int
+
+  orders OrderTools[]
+
+  @@map("tools")
+}
