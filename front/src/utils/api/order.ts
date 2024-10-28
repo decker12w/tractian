@@ -5,7 +5,7 @@ import { api } from "./api";
 export const submitServiceOrder = async (data: ServiceOrderDTO) => {
   const formData = new FormData();
 
-  console.log(data)
+  console.log(data);
 
   if (data.text) {
     formData.append("text", data.text);
@@ -26,4 +26,9 @@ export const submitServiceOrder = async (data: ServiceOrderDTO) => {
   });
 
   return response.data.result;
+};
+
+const getTools = async (data: any) => {
+  const response = await api.post("/users", data);
+  return response.data;
 };

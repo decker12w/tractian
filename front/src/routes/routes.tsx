@@ -9,6 +9,7 @@ import ServiceOrderAudio from "../pages/ServiceOrderAudio";
 import ServiceOrderText from "../pages/ServiceOrderText";
 import ProtectedRoutes from "../utils/routes/ProtectedRoutes";
 import PublicRoute from "../utils/routes/PublicRoutes";
+import HistoryOrderService from "../pages/HistoryOrderService";
 
 const AppRoutes = () => {
   return (
@@ -20,12 +21,13 @@ const AppRoutes = () => {
       </Route>
 
       {/* Rotas Protegidas */}
-      <Route element={<ProtectedRoutes />}>
-        <Route path="/home" element={<Home />} />
-        <Route path="/order-text" element={<ServiceOrderText />} />
-        <Route path="/order-audio" element={<ServiceOrderAudio />} />
-        <Route path="/order-create" element={<ServiceOrderForm />} />
-      </Route>
+      {/* <Route element={<ProtectedRoutes />}> */}
+      <Route path="/home" element={<Home />} />
+      <Route path="/order-text" element={<ServiceOrderText />} />
+      <Route path="/order-audio" element={<ServiceOrderAudio />} />
+      <Route path="/order-create" element={<ServiceOrderForm />} />
+      <Route path="/history-order-service" element={<HistoryOrderService />} />
+      {/*     </Route> */}
 
       {/* Rota para lidar com URLs inexistentes */}
       <Route path="*" element={<Navigate to="/" />} />
