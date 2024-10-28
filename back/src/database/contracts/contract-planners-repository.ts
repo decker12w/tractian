@@ -6,7 +6,7 @@ export type CreatePlanner = {
   password: string
 }
 
-export abstract class PlannerRepository {
+export abstract class PlannersRepository {
   abstract create: (data: CreatePlanner) => Promise<Planner>
   abstract findById: (id: string) => Promise<Planner | null>
   abstract findByUsername: (username: string) => Promise<Planner | null>

@@ -3,20 +3,22 @@ import { TechnicalsRepository } from '@/database/contracts/contract-technicals-r
 import { Encrypter } from '@/cryptography/contracts/contract-encrypter'
 import { HashComparer } from '@/cryptography/contracts/contract-hash-comparer'
 import { InvalidCredentialsError } from './errors/invalid-credentials-error'
+import { PlannersRepository } from '@/database/contracts/contract-planners-repository'
 
-type AuthenticateTechnicalServiceRequest = {
+type AuthenticateUserServiceRequest = {
   username: string
   password: string
 }
 
-type AuthenticateTechnicalServiceResponse = {
+type AuthenticateUserServiceResponse = {
   accessToken: string
 }
 
 @Injectable()
-export class AuthenticateTechnicalService {
+export class AuthenticateUserService {
   constructor(
     private technicalsRepository: TechnicalsRepository,
+    private plannersRepository: PlannersRepository,
     private encrypter: Encrypter,
     private hashComparer: HashComparer,
   ) {}
@@ -24,21 +26,38 @@ export class AuthenticateTechnicalService {
   async execute({
     username,
     password,
-  }: AuthenticateTechnicalServiceRequest): Promise<AuthenticateTechnicalServiceResponse> {
+  }: AuthenticateUserServiceRequest): Promise<AuthenticateUserServiceResponse> {
     const technical = await this.technicalsRepository.findByUsername(username)
-    if (technical === null) {
+    const planner = await this.plannersRepository.findByUsername(username)
+    if (planner === null && technical === null) {
       throw new InvalidCredentialsError()
+    }
+
+    if (planner === null && technical !== null) {
+      const samePasswords = await this.hashComparer.compare(
+        password,
+        technical.password,
+      )
+
+      if (!samePasswords) {
+        throw new InvalidCredentialsError()
+      }
+
+      const accessToken = await this.encrypter.encrypt({ sub: technical.id })
+      return {
+        accessToken,
+      }
     }
 
     const samePasswords = await this.hashComparer.compare(
       password,
-      technical.password,
+      planner!.password,
     )
     if (!samePasswords) {
       throw new InvalidCredentialsError()
     }
 
-    const accessToken = await this.encrypter.encrypt({ sub: technical.id })
+    const accessToken = await this.encrypter.encrypt({ sub: planner!.id })
     return {
       accessToken,
     }

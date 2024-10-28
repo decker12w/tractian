@@ -3,22 +3,24 @@ import { Planner, Technical } from '@prisma/client'
 import { HashGenerator } from '@/cryptography/contracts/contract-hash-generator'
 import { ResourceAlreadyExistsError } from '@/services/errors/resource-already-exists-error'
 import { TechnicalsRepository } from '@/database/contracts/contract-technicals-repository'
+import { PlannersRepository } from '@/database/contracts/contract-planners-repository'
 
-type CreateTechnicalServiceRequest = {
+type CreateUserServiceRequest = {
   fullName: string
   username: string
   password: string
   role: 'TECHNICAL' | 'PLANNER'
 }
 
-type CreateTechnicalServiceResponse = {
+type CreateUserServiceResponse = {
   user: Technical | Planner
 }
 
 @Injectable()
-export class CreateTechnicalService {
+export class CreateUserService {
   constructor(
     private technicalsRepository: TechnicalsRepository,
+    private plannersRepository: PlannersRepository,
     private hashGenerator: HashGenerator,
   ) {}
 
@@ -27,7 +29,7 @@ export class CreateTechnicalService {
     username,
     password,
     role,
-  }: CreateTechnicalServiceRequest): Promise<CreateTechnicalServiceResponse> {
+  }: CreateUserServiceRequest): Promise<CreateUserServiceResponse> {
     const passwordHash = await this.hashGenerator.hash(password)
 
     if (role === 'TECHNICAL') {

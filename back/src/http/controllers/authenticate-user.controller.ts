@@ -1,24 +1,20 @@
 import { Body, Controller, HttpCode, Post, UsePipes } from '@nestjs/common'
 import { ZodValidationPipe } from '@/http/pipes/zod-validation-pipe'
-import { AuthenticateTechnicalService } from '@/services/authenticate-user.service'
+import { AuthenticateUserService } from '@/services/authenticate-user.service'
 import {
-  AuthenticateTechnicalBodySchema,
-  authenticateTechnicalBodySchema,
+  AuthenticateUserBodySchema,
+  authenticateUserBodySchema,
 } from '@/http/schemas/user-schemas'
 
-@Controller('/technicals/login')
-export class AuthenticateTechnicalController {
-  constructor(
-    private authenticateTechnicalService: AuthenticateTechnicalService,
-  ) {}
+@Controller('/users/login')
+export class AuthenticateUserController {
+  constructor(private authenticateUserService: AuthenticateUserService) {}
 
   @Post()
   @HttpCode(200)
-  @UsePipes(new ZodValidationPipe(authenticateTechnicalBodySchema))
-  async handle(
-    @Body() { username, password }: AuthenticateTechnicalBodySchema,
-  ) {
-    const { accessToken } = await this.authenticateTechnicalService.execute({
+  @UsePipes(new ZodValidationPipe(authenticateUserBodySchema))
+  async handle(@Body() { username, password }: AuthenticateUserBodySchema) {
+    const { accessToken } = await this.authenticateUserService.execute({
       username,
       password,
     })

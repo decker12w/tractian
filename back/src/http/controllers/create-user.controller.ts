@@ -1,31 +1,32 @@
 import { ZodValidationPipe } from '@/http/pipes/zod-validation-pipe'
 import { Body, Controller, HttpCode, Post, UsePipes } from '@nestjs/common'
 import {
-  CreateTechnicalBodySchema,
-  createTechnicalBodySchema,
+  CreateUserBodySchema,
+  createUserBodySchema,
 } from '@/http/schemas/user-schemas'
-import { CreateTechnicalService } from '@/services/create-user.service'
-import { TechnicalPresenter } from '@/http/presenters/technical-presenter'
+import { CreateUserService } from '@/services/create-user.service'
+import { UserPresenter } from '@/http/presenters/user-presenter'
 
-@Controller('/technicals')
-export class CreateTechnicalController {
-  constructor(private createTechnicalService: CreateTechnicalService) {}
+@Controller('/users')
+export class CreateUserController {
+  constructor(private createUserService: CreateUserService) {}
 
   @Post()
   @HttpCode(201)
-  @UsePipes(new ZodValidationPipe(createTechnicalBodySchema))
+  @UsePipes(new ZodValidationPipe(createUserBodySchema))
   async handle(
     @Body()
-    { fullName, username, password }: CreateTechnicalBodySchema,
+    { fullName, username, password, role }: CreateUserBodySchema,
   ) {
-    const { technical } = await this.createTechnicalService.execute({
+    const { user } = await this.createUserService.execute({
       fullName,
       username,
       password,
+      role,
     })
 
     return {
-      technical: TechnicalPresenter.format(technical),
+      user: UserPresenter.format(user),
     }
   }
 }

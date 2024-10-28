@@ -2,16 +2,15 @@ import { Module } from '@nestjs/common'
 import { PrismaService } from './prisma/prisma.service'
 import { TechnicalsRepository } from './contracts/contract-technicals-repository'
 import { PrismaTechnicalsRepository } from './prisma/repositories/prisma-technicals-repository'
-import { PlannerPresenter } from '@/http/presenters/planner-presenter'
-import { PlannerRepository } from './contracts/contract-planner-repository'
-import { PrismaPlannerRepository } from './prisma/repositories/prisma-planner-repository'
+import { PlannersRepository } from './contracts/contract-planners-repository'
+import { PrismaPlannersRepository } from './prisma/repositories/prisma-planners-repository'
 
 @Module({
   providers: [
     PrismaService,
     { provide: TechnicalsRepository, useClass: PrismaTechnicalsRepository },
-    { provide: PlannerRepository, useClass: PrismaPlannerRepository },
+    { provide: PlannersRepository, useClass: PrismaPlannersRepository },
   ],
-  exports: [PrismaService, TechnicalsRepository],
+  exports: [PrismaService, TechnicalsRepository, PlannersRepository],
 })
-export class DatabaseModule { }
+export class DatabaseModule {}

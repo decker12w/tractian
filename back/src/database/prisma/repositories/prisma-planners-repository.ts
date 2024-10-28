@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
-import { CreatePlanner, PlannerRepository } from '@/database/contracts/contract-planner-repository'
+import {
+  CreatePlanner,
+  PlannersRepository,
+} from '@/database/contracts/contract-planners-repository'
 import { Planner } from '@prisma/client'
 
 @Injectable()
-export class PrismaPlannerRepository implements PlannerRepository {
+export class PrismaPlannersRepository implements PlannersRepository {
   constructor(private prismaService: PrismaService) {}
 
   async create(data: CreatePlanner): Promise<Planner> {
