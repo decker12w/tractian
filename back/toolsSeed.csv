@@ -1,4 +1,4 @@
-Categoria,Descrição do Material/Equipamento,Código SAP
+category,description,sap
 Ferramentas de Corte,Serra Circular,MAT001
 Ferramentas de Corte,Disco de Corte,MAT002
 Ferramentas de Corte,Serra de Fita,MAT003
