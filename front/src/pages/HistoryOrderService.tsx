@@ -30,8 +30,12 @@ interface OrdersProps {
 }
 
 // API call to fetch orders
-async function fetchOrders(): Promise<OrdersState> {
-  const response = await api.get<OrdersResponse>("/orders/technical");
+async function fetchOrders(token: string): Promise<OrdersState> {
+  const response = await api.get<OrdersResponse>("/orders/technical", {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
   console.log(response)
   const { openOrders, inProgressOrders, finishedOrders } = response.data;
 
@@ -50,7 +54,7 @@ function OpenOrders({ orders }: OrdersProps) {
       {orders.map((order) => (
         <div
           key={order.id}
-          className="flex justify-between items-center mt-2 bg-gray-800 p-2 rounded-md"
+          className=" w-full min-w-96 flex justify-between items-center gap-5 mt-2 bg-gray-800 p-2 rounded-md"
         >
           <span>{order.id}</span>
           <button className="bg-green-500 px-3 py-1 rounded-md">
@@ -71,7 +75,7 @@ function InProgressOrders({ orders }: OrdersProps) {
       {orders.map((order) => (
         <div
           key={order.id}
-          className="flex justify-between items-center mt-2 bg-gray-800 p-2 rounded-md"
+          className="w-full min-w-96 flex justify-between items-center gap-5 mt-2 bg-gray-800 p-2 rounded-md"
         >
           <span>{order.id}</span>
           <button className="bg-yellow-500 px-3 py-1 rounded-md">
@@ -92,7 +96,7 @@ function CompletedOrders({ orders }: OrdersProps) {
       {orders.map((order) => (
         <div
           key={order.id}
-          className="flex justify-between items-center mt-2 bg-gray-800 p-2 rounded-md"
+          className="w=full min-w-96 gap-5 flex justify-between items-center mt-2 bg-gray-800 p-2 rounded-md"
         >
           <span>{order.id}</span>
           <button className="bg-blue-500 px-3 py-1 rounded-md">Download</button>
@@ -105,7 +109,7 @@ function CompletedOrders({ orders }: OrdersProps) {
 export default function HistoryOrderService() {
   const navigate = useNavigate();
   const [loginError, setLoginError] = useState(false);
-  const { loginUser } = useAuthContext();
+  const { token } = useAuthContext();
   const [orders, setOrders] = useState<OrdersState>({
     open: [],
     inProgress: [],
@@ -129,7 +133,7 @@ export default function HistoryOrderService() {
   useEffect(() => {
     const loadOrders = async () => {
       try {
-        const fetchedOrders = await fetchOrders();
+        const fetchedOrders = await fetchOrders(token);
         setOrders(fetchedOrders);
       } catch (error) {
         console.error("Failed to fetch orders:", error);
