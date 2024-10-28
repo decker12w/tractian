@@ -25,3 +25,5 @@ export const submitServiceOrder = async (data: ServiceOrderDTO) => {
 
   return response.data;
 };
+
+export const submitAllOrders = async (data: ServiceOrderDTO[]) => {};

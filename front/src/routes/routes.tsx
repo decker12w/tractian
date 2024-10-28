@@ -12,18 +12,19 @@ const AppRoutes = () => {
   return (
     <Routes>
       {/* Rotas Públicas */}
-      {/*   <Route element={<PublicRoute />}> */}
-      <Route path="/" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      <Route element={<PublicRoute />}>
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Route>
       {/*  </Route> */}
 
       {/* Rotas Protegidas */}
-      {/*   <Route element={<ProtectedRoutes />}> */}
-      <Route path="/home" element={<Home />} />
-      <Route path="/order-text" element={<ServiceOrderText />} />
-      <Route path="/order-audio" element={<ServiceOrderAudio />} />
-      <Route path="/order-create" element={<ServiceOrderForm />} />
-      {/*       </Route> */}
+      <Route element={<ProtectedRoutes />}>
+        <Route path="/home" element={<Home />} />
+        <Route path="/order-text" element={<ServiceOrderText />} />
+        <Route path="/order-audio" element={<ServiceOrderAudio />} />
+        <Route path="/order-create" element={<ServiceOrderForm />} />
+      </Route>
 
       {/* Rota para lidar com URLs inexistentes */}
       <Route path="*" element={<Navigate to="/" />} />
