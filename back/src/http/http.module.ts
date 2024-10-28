@@ -9,6 +9,8 @@ import { AuthenticateUserService } from '@/services/authenticate-user.service'
 import { AuthenticateUserController } from './controllers/authenticate-user.controller'
 import { AnalyzeAudioOrTextService } from '@/services/analyze-audio-or-text.service'
 import { AnalyzeAudioOrTextController } from './controllers/analyze-audio-or-text.controller'
+import { CreateOrderService } from '@/services/create-order.service'
+import { CreateOrderController } from './controllers/create-order.controller'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, StorageModule, AiModule],
@@ -16,11 +18,13 @@ import { AnalyzeAudioOrTextController } from './controllers/analyze-audio-or-tex
     CreateUserController,
     AuthenticateUserController,
     AnalyzeAudioOrTextController,
+    CreateOrderController,
   ],
   providers: [
     CreateUserService,
     AuthenticateUserService,
     AnalyzeAudioOrTextService,
+    CreateOrderService,
   ],
 })
 export class HttpModule {}
