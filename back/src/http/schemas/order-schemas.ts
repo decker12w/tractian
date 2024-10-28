@@ -10,7 +10,6 @@ const createOrderBodySchema = z.object({
   description: z.string(),
   type: z.nativeEnum(OrderType),
   machineName: z.string(),
-  technicalId: z.string().uuid(),
 })
 
 const getToolsRecommendationByOrderParamSchema = z.object({

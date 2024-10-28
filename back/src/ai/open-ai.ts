@@ -14,9 +14,19 @@ import {
   ToolsRecommenderRequest,
 } from './contracts/contract-tools-recommender'
 import { Tool } from '@prisma/client'
+import {
+  TechnicalRecommender,
+  TechnicalRecommenderRequest,
+} from './contracts/contract-technical-recommender'
 
 @Injectable()
-export class OpenAI implements AudioTranslator, TextAnalyzer, ToolsRecommender {
+export class OpenAI
+  implements
+    AudioTranslator,
+    TextAnalyzer,
+    ToolsRecommender,
+    TechnicalRecommender
+{
   private openAiClient: OpenAIApi
 
   constructor(config: ConfigService<Env, true>) {
@@ -126,6 +136,50 @@ export class OpenAI implements AudioTranslator, TextAnalyzer, ToolsRecommender {
       const toolsRecommended = JSON.parse(assistantReply || '[]')
 
       return toolsRecommended
+    } catch (error) {
+      throw new OpenAIError()
+    }
+  }
+
+  async recommendTechnical({
+    orders,
+    technicals,
+  }: TechnicalRecommenderRequest): Promise<string> {
+    try {
+      const prompt = `
+      Com base nas seguinte ordems de serviço industrial, finalizadas, abertas e iniciadas, recomende 1 técnico que está com menos tarefas marcadas para concluir o trabalho. Retorne o resultado estritamente como um uuid do técnico, sem qualquer texto ou explicação adicional.
+      Use como base essas ordens já criadas: 
+      ${orders.map((order) => {
+        return `
+            {
+              "id": "${order.id}",
+              "createdAt": "${order.createdAt}",
+              "startedAt": "${order.startedAt}",
+              "finishedAt": "${order.finishedAt}",
+              "technicalId": ${order.technicalId}
+            }
+          `
+      })}
+      Use como base esses técnicos:
+      ${technicals.map((technical) => {
+        return `
+          {
+            "id": "${technical.id}"
+          }
+        `
+      })}
+      `
+
+      const response = await this.openAiClient.chat.completions.create({
+        model: 'gpt-3.5-turbo',
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0.2,
+      })
+
+      const assistantReply = response.choices[0].message?.content?.trim()
+      const id = JSON.parse(assistantReply || '[]')
+
+      return id
     } catch (error) {
       throw new OpenAIError()
     }
