@@ -176,11 +176,9 @@ export class OpenAI
         temperature: 0.2,
       })
 
-      const assistantReply = response.choices[0].message?.content?.trim()
-      const id = JSON.parse(assistantReply || '[]')
-
-      return id
+      return response.choices[0].message.content!
     } catch (error) {
+      console.log(error)
       throw new OpenAIError()
     }
   }

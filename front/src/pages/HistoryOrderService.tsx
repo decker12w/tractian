@@ -32,6 +32,7 @@ interface OrdersProps {
 // API call to fetch orders
 async function fetchOrders(): Promise<OrdersState> {
   const response = await api.get<OrdersResponse>("/orders/technical");
+  console.log(response)
   const { openOrders, inProgressOrders, finishedOrders } = response.data;
 
   return {
