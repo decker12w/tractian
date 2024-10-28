@@ -14,13 +14,14 @@ import { PrismaOrdersRepository } from './prisma/repositories/prisma-orders-repo
     PrismaService,
     { provide: TechnicalsRepository, useClass: PrismaTechnicalsRepository },
     { provide: PlannersRepository, useClass: PrismaPlannersRepository },
-    { provide: ToolsRepository, useClass: PrismaToolsRepository}
+    { provide: ToolsRepository, useClass: PrismaToolsRepository },
     { provide: OrdersRepository, useClass: PrismaOrdersRepository },
   ],
   exports: [
     PrismaService,
     TechnicalsRepository,
     PlannersRepository,
+    ToolsRepository,
     OrdersRepository,
   ],
 })

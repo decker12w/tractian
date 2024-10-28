@@ -11,6 +11,12 @@ import { AnalyzeAudioOrTextService } from '@/services/analyze-audio-or-text.serv
 import { AnalyzeAudioOrTextController } from './controllers/analyze-audio-or-text.controller'
 import { CreateOrderService } from '@/services/create-order.service'
 import { CreateOrderController } from './controllers/create-order.controller'
+import { GetToolsRecommendationByOrderService } from '@/services/get-tools-recommendation-by-order.service'
+import { GetToolsRecommendationByOrderController } from './controllers/get-tools-recommendation-by-order.controller'
+import { UpdateOrderStatusService } from '@/services/update-order-status.service'
+import { UpdateOrderStatusController } from './controllers/update-order-status.controller'
+import { UpdateOrderToolsService } from '@/services/update-order-tools.service'
+import { UpdateOrderToolsController } from './controllers/update-order-tools.controller'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, StorageModule, AiModule],
@@ -19,12 +25,18 @@ import { CreateOrderController } from './controllers/create-order.controller'
     AuthenticateUserController,
     AnalyzeAudioOrTextController,
     CreateOrderController,
+    GetToolsRecommendationByOrderController,
+    UpdateOrderStatusController,
+    UpdateOrderToolsController,
   ],
   providers: [
     CreateUserService,
     AuthenticateUserService,
     AnalyzeAudioOrTextService,
     CreateOrderService,
+    GetToolsRecommendationByOrderService,
+    UpdateOrderStatusService,
+    UpdateOrderToolsService,
   ],
 })
 export class HttpModule {}

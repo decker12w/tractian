@@ -13,8 +13,11 @@ import {
 import Dropdown from "../components/Dropdown";
 import { OrderType } from "../utils/types";
 import { useAnalyzerContext } from "../context/AnalyserContext";
+import { api } from "../utils/api/api";
+import { useAuth } from "../hooks/useAuth";
 
 export default function ServiceOrderForm() {
+  const { token } = useAuth()
   const navigate = useNavigate();
   const { response, clearResponse } = useAnalyzerContext(); // Acesso ao contexto
 
@@ -33,8 +36,6 @@ export default function ServiceOrderForm() {
     handleSubmit,
     control,
     setValue,
-    getValues,
-    reset,
     formState: { errors },
   } = useForm<ServiceOrderFormDTO>({
     resolver: zodResolver(CreateOrderFormSchema),
@@ -98,8 +99,16 @@ export default function ServiceOrderForm() {
       // Último passo, envia os dados
       setIsSubmitting(true); // Inicia o carregamento
       try {
-        /*   const response = await submitAllOrders(formData); // Implemente esta função */
-        console.log("Dados enviados com sucesso:", response);
+        const responses = await Promise.all(
+          updatedFormData.map((order) =>
+            api.post("/orders", {...order, type: order.orderType, technicalId: 'b84e46b4-f882-43a8-b007-f7e634be8200'}, {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            })
+          )
+        );
+        console.log("Dados enviados com sucesso:", responses);
         // Limpa o contexto e navega para home
         clearResponse();
         navigate("/home");

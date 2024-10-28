@@ -6,14 +6,17 @@ import { Env } from '@/env'
 import { AudioTranslator } from './contracts/contract-audio-translator'
 import {
   TextAnalyzer,
-  AnalyzerResponse
+  AnalyzerResponse,
 } from './contracts/contract-text-analyzer'
 import { OpenAIError } from '@/services/errors/open-ai-error'
-import { ToolsRecommenderRequest, ToolsRecommenderResponse } from './contracts/contract-tools-recommender'
-import { Order } from '@prisma/client'
+import {
+  ToolsRecommender,
+  ToolsRecommenderRequest,
+} from './contracts/contract-tools-recommender'
+import { Tool } from '@prisma/client'
 
 @Injectable()
-export class OpenAI implements AudioTranslator, TextAnalyzer {
+export class OpenAI implements AudioTranslator, TextAnalyzer, ToolsRecommender {
   private openAiClient: OpenAIApi
 
   constructor(config: ConfigService<Env, true>) {
@@ -69,18 +72,18 @@ export class OpenAI implements AudioTranslator, TextAnalyzer {
     }
   }
 
-
-  async recommendTools(order: Order): Promise<ToolsRecommenderResponse> {
+  async recommendTools({
+    order,
+    tools,
+  }: ToolsRecommenderRequest): Promise<Tool[]> {
     try {
-      // Construct the order details for the prompt
       const orderDetails = `
-      Order Title: ${order.title}
-      Description: ${order.description}
-      Type: ${order.type}
-      Machine Name: ${order.machineName}
-      `;
+      Título ordem: ${order.title}
+      Descrição: ${order.description}
+      Tipo: ${order.type}
+      Nome da máquina: ${order.machineName}
+      `
 
-      // Build the prompt with the required context and instructions
       const prompt = `
       Com base na seguinte ordem de serviço industrial, recomende uma lista de ferramentas necessárias para concluir o trabalho. Retorne o resultado estritamente como um array JSON de objetos de ferramentas, sem qualquer texto ou explicação adicional. Cada objeto de ferramenta deve ter a seguinte estrutura:
       [
@@ -94,26 +97,37 @@ export class OpenAI implements AudioTranslator, TextAnalyzer {
         },
         ...
       ]
-
+      Use como base essas ferramentas já criadas: 
+      ${tools.map((tool) => {
+        return `
+            {
+              "id": "${tool.id}",
+              "category": "${tool.category}",
+              "description": "${tool.description}",
+              "sap": "${tool.sap}",
+              "quantity": ${tool.quantity},
+              "quantityInUse": ${tool.quantityInUse}
+            }
+          `
+      })}
       Detalhes da Ordem de Serviço Industrial:
       ${orderDetails}
-      `;
+      `
 
-      // Call the OpenAI API to get the recommended tools
+      console.log(prompt)
+
       const response = await this.openAiClient.chat.completions.create({
         model: 'gpt-3.5-turbo',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.2,
-      });
+      })
 
-      // Extract and parse the assistant's reply
-      const assistantReply = response.choices[0].message?.content?.trim();
-      const tools: ToolsRecommenderResponse = JSON.parse(assistantReply || '[]');
+      const assistantReply = response.choices[0].message?.content?.trim()
+      const toolsRecommended = JSON.parse(assistantReply || '[]')
 
-      // Return the list of recommended tools
-      return tools;
+      return toolsRecommended
     } catch (error) {
-      throw new OpenAIError();
+      throw new OpenAIError()
     }
   }
 }

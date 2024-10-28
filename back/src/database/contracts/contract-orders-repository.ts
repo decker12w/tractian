@@ -10,8 +10,21 @@ export type CreateOrder = {
   technicalId: string
 }
 
+export type UpdateOrder = {
+  id: string
+  startedAt: Date | null
+  finishedAt: Date | null
+}
+
+export type AddTool = {
+  id: string
+  toolsIds: string[]
+}
+
 export abstract class OrdersRepository {
   abstract create: (data: CreateOrder) => Promise<Order>
+  abstract update: (data: UpdateOrder) => Promise<Order>
+  abstract addTools: (data: AddTool) => Promise<Order>
   abstract findById: (id: string) => Promise<Order | null>
   abstract findByTechnical: (technicalId: string) => Promise<Order[]>
 }
