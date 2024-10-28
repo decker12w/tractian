@@ -54,7 +54,7 @@ export default function ServiceOrderText() {
       <div className="w-full flex items-center justify-center gap-12">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="bg-black text-white py-10 px-24 rounded-3xl w-full max-w-md"
+          className="bg-background text-white py-10 px-24 rounded-3xl w-full max-w-md"
         >
           <div className="flex flex-col gap-4">
             <div className="text-4xl font-bold mb-3 text-center">

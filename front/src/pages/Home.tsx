@@ -10,7 +10,7 @@ export default function ServiceOrderForm() {
       <FaIndustry className="absolute top-6 left-6" size={50} />
 
       <div className="w-full flex items-center justify-center gap-12">
-        <div className="bg-black text-white py-10 px-24 rounded-3xl ">
+        <div className="bg-background text-white py-10 px-24 rounded-3xl ">
           <div className="w-[300px] flex flex-col gap-2.5 items-center">
             <div className="text-4xl font-bold mb-3 text-center">
               Escolha a forma de envio

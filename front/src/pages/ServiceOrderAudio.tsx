@@ -110,7 +110,7 @@ export default function ServiceOrderAudio() {
       <div className="w-full flex items-center justify-center gap-12">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="bg-black text-white py-10 px-24 rounded-3xl "
+          className="bg-background text-white py-10 px-24 rounded-3xl "
         >
           <div className="w-[300px] flex flex-col gap-2.5 items-center">
             <div className="text-4xl font-bold mb-3 text-center">
