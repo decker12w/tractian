@@ -1,8 +1,7 @@
 import { type ReadStream } from 'node:fs'
 
 export enum Folder {
-  AVATARS = 'avatars',
-  BANNERS = 'banners',
+  ORDERS = 'orders',
   ROOT = '',
 }
 
