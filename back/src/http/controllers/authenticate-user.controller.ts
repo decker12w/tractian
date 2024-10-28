@@ -1,10 +1,10 @@
 import { Body, Controller, HttpCode, Post, UsePipes } from '@nestjs/common'
 import { ZodValidationPipe } from '@/http/pipes/zod-validation-pipe'
-import { AuthenticateTechnicalService } from '@/services/authenticate-technical.service'
+import { AuthenticateTechnicalService } from '@/services/authenticate-user.service'
 import {
   AuthenticateTechnicalBodySchema,
   authenticateTechnicalBodySchema,
-} from '@/http/schemas/technical-schemas'
+} from '@/http/schemas/user-schemas'
 
 @Controller('/technicals/login')
 export class AuthenticateTechnicalController {

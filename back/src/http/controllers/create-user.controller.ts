@@ -3,8 +3,8 @@ import { Body, Controller, HttpCode, Post, UsePipes } from '@nestjs/common'
 import {
   CreateTechnicalBodySchema,
   createTechnicalBodySchema,
-} from '@/http/schemas/technical-schemas'
-import { CreateTechnicalService } from '@/services/create-technical.service'
+} from '@/http/schemas/user-schemas'
+import { CreateTechnicalService } from '@/services/create-user.service'
 import { TechnicalPresenter } from '@/http/presenters/technical-presenter'
 
 @Controller('/technicals')

@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-const createTechnicalBodySchema = z.object({
+const createUserBodySchema = z.object({
   fullName: z.string().min(1, { message: 'O nome completo é obrigatório.' }),
   username: z
     .string()
@@ -8,21 +8,20 @@ const createTechnicalBodySchema = z.object({
   password: z
     .string()
     .min(6, { message: 'A senha deve ter pelo menos 6 caracteres.' }),
+  role: z.enum(['TECHNICAL', 'PLANNER']),
 })
 
-const authenticateTechnicalBodySchema = z.object({
+const authenticateUserBodySchema = z.object({
   username: z.string().min(1, { message: 'O nome de usuário é obrigatório.' }),
   password: z.string().min(1, { message: 'A senha é obrigatória.' }),
 })
 
-type CreateTechnicalBodySchema = z.infer<typeof createTechnicalBodySchema>
-type AuthenticateTechnicalBodySchema = z.infer<
-  typeof authenticateTechnicalBodySchema
->
+type CreateUserBodySchema = z.infer<typeof createUserBodySchema>
+type AuthenticateUserBodySchema = z.infer<typeof authenticateUserBodySchema>
 
 export {
-  createTechnicalBodySchema,
-  authenticateTechnicalBodySchema,
-  CreateTechnicalBodySchema,
-  AuthenticateTechnicalBodySchema,
+  createUserBodySchema,
+  authenticateUserBodySchema,
+  CreateUserBodySchema,
+  AuthenticateUserBodySchema,
 }
