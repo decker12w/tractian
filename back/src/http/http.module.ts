@@ -17,6 +17,8 @@ import { UpdateOrderStatusService } from '@/services/update-order-status.service
 import { UpdateOrderStatusController } from './controllers/update-order-status.controller'
 import { UpdateOrderToolsService } from '@/services/update-order-tools.service'
 import { UpdateOrderToolsController } from './controllers/update-order-tools.controller'
+import { ListTechnicalOrdersService } from '@/services/list-technical-orders.service'
+import { ListTechnicalOrdersController } from './controllers/list-technical-orders.controller'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, StorageModule, AiModule],
@@ -28,6 +30,7 @@ import { UpdateOrderToolsController } from './controllers/update-order-tools.con
     GetToolsRecommendationByOrderController,
     UpdateOrderStatusController,
     UpdateOrderToolsController,
+    ListTechnicalOrdersController,
   ],
   providers: [
     CreateUserService,
@@ -37,6 +40,7 @@ import { UpdateOrderToolsController } from './controllers/update-order-tools.con
     GetToolsRecommendationByOrderService,
     UpdateOrderStatusService,
     UpdateOrderToolsService,
+    ListTechnicalOrdersService,
   ],
 })
 export class HttpModule {}
