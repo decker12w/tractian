@@ -9,11 +9,12 @@ import {
   ServiceOrderSchema,
 } from "../utils/schemas/serviceOrder";
 import { submitServiceOrder } from "../utils/api/order";
+import { useAnalyzerContext } from "../context/AnalyserContext";
 
 export default function ServiceOrderText() {
   const navigate = useNavigate();
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [result, setResult] = useState<string | null>(null);
+  const { setResponse } = useAnalyzerContext();
 
   const {
     register,
@@ -26,10 +27,10 @@ export default function ServiceOrderText() {
 
   const onSubmit = async (data: ServiceOrderDTO) => {
     setSubmitError(null);
-    setResult(null);
     try {
       const response = await submitServiceOrder(data);
-      setResult(response.result);
+      console.log(response)
+      setResponse(response);
       navigate("/order-create");
     } catch (error: any) {
       console.error("Erro ao enviar a ordem de serviço:", error);
@@ -81,14 +82,6 @@ export default function ServiceOrderText() {
                 </span>
               )}
             </div>
-
-            {/* Exibir Resultado */}
-            {result && (
-              <div className="bg-gray-800 p-4 rounded">
-                <h3 className="text-lg font-semibold">Resultado:</h3>
-                <p>{result}</p>
-              </div>
-            )}
 
             {/* Exibir Erro Geral */}
             {submitError && (

@@ -2,10 +2,10 @@ import { ZodValidationPipe } from '@/http/pipes/zod-validation-pipe'
 import {
   Body,
   Controller,
-  Get,
   HttpCode,
   MaxFileSizeValidator,
   ParseFilePipe,
+  Post,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common'
@@ -24,7 +24,7 @@ const bodyValidationPipe = new ZodValidationPipe(analyzeAudioOrTextBodySchema)
 export class AnalyzeAudioOrTextController {
   constructor(private analyzeAudioOrTextService: AnalyzeAudioOrTextService) {}
 
-  @Get()
+  @Post()
   @HttpCode(200)
   @UseInterceptors(FileInterceptor('audio', multerOptions))
   async handle(
